@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Question</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;500&display=swap');
+
+        :root {
+            --primary: #ff4d6d;
+            --secondary: #ff8fa3;
+            --bg: #fff0f3;
+            --text: #590d22;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.2);
+            max-width: 90%;
+            width: 400px;
+            position: relative;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            position: relative;
+            height: 60px; /* Space for buttons */
+        }
+
+        button {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 500;
+        }
+
+        .btn-yes {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.4);
+        }
+
+        .btn-yes:hover {
+            transform: scale(1.05);
+            background-color: #d90429;
+        }
+
+        .btn-no {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        /* Hidden Sections */
+        .hidden {
+            display: none;
+        }
+
+        /* Reasons List */
+        .reasons-list {
+            text-align: left;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+        .reasons-list li {
+            margin-bottom: 10px;
+            list-style: none;
+        }
+        .reasons-list li::before {
+            content: "❤️";
+            margin-right: 10px;
+        }
+
+        /* The Ring Image */
+        .ring-img {
+            width: 150px;
+            height: 150px;
+            object-fit: contain;
+            margin: 20px auto;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        /* Confetti Canvas */
+        #confetti {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti"></canvas>
+
+    <!-- SECTION 1: INTRO -->
+    <div class="container" id="section-intro">
+        <h1>Hey Love!</h1>
+        <p>I have a very important question to ask you. It's been on my mind for a long time...</p>
+        <div class="btn-group">
+            <button class="btn-yes" onclick="nextSection('section-reasons')">Click Here</button>
+        </div>
+    </div>
+
+    <!-- SECTION 2: REASONS -->
+    <div class="container hidden" id="section-reasons">
+        <h1>Why Me?</h1>
+        <p>Here are just a few reasons why you should say yes:</p>
+        <ul class="reasons-list">
+            <li>I make the best coffee for you.</li>
+            <li>I will always listen to your stories.</li>
+            <li>You make me laugh every single day.</li>
+            <li>I promise to hold your hand through everything.</li>
+            <li>You are my best friend.</li>
+        </ul>
+        <div class="btn-group">
+            <button class="btn-yes" onclick="nextSection('section-question')">Still thinking...</button>
+        </div>
+    </div>
+
+    <!-- SECTION 3: THE QUESTION -->
+    <div class="container hidden" id="section-question">
+        <h1>Will You Marry Me?</h1>
+        <p>I want to spend the rest of my life making you happy. Will you do me the honor?</p>
+        
+        <!-- Placeholder for Ring Image - You can replace src with a real image URL -->
+        <img src="https://cdn-icons-png.flaticon.com/512/9553/9553953.png" alt="Ring" class="ring-img">
+
+        <div class="btn-group">
+            <button class="btn-yes" onclick="acceptProposal()">YES!</button>
+            <button class="btn-no" id="btn-no" onmouseover="moveButton()" onclick="moveButton()">No</button>
+        </div>
+    </div>
+
+    <!-- SECTION 4: SUCCESS -->
+    <div class="container hidden" id="section-success">
+        <h1>YAY! I LOVE YOU!</h1>
+        <p>You just made me the happiest person in the world. ❤️</p>
+        <p>Let's start planning our future!</p>
+        <img src="https://cdn-icons-png.flaticon.com/512/740/740843.png" alt="Hugging" class="ring-img" style="width: 100px;">
+    </div>
+
+    <script>
+        // Navigation Logic
+        function nextSection(id) {
+            document.querySelectorAll('.container').forEach(div => div.classList.add('hidden'));
+            document.getElementById(id).classList.remove('hidden');
+        }
+
+        // The "No" Button Logic
+        function moveButton() {
+            const btn = document.getElementById('btn-no');
+            const x = Math.random() * (window.innerWidth - btn.offsetWidth);
+            const y = Math.random() * (window.innerHeight - btn.offsetHeight);
+            
+            // Make it absolute so it can move anywhere
+            btn.style.position = 'fixed';
+            btn.style.left = `${x}px`;
+            btn.style.top = `${y}px`;
+        }
+
+        // The "Yes" Button Logic
+        function acceptProposal() {
+            nextSection('section-success');
+            startConfetti();
+        }
+
+        // Simple Confetti Effect
+        function startConfetti() {
+            const canvas = document.getElementById('confetti');
+            const ctx = canvas.getContext('2d');
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            const pieces = [];
+            const numberOfPieces = 150;
+            const colors = ['#ff4d6d', '#ff8fa3', '#fff0f3', '#ffd700'];
+
+            function update() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                pieces.forEach((p) => {
+                    p.y += p.speed;
+                    p.rotation += p.rotationSpeed;
+                    ctx.save();
+                    ctx.translate(p.x, p.y);
+                    ctx.rotate(p.rotation);
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                    ctx.restore();
+
+                    if (p.y > canvas.height) {
+                        p.y = -20;
+                        p.x = Math.random() * canvas.width;
+                    }
+                });
+                requestAnimationFrame(update);
+            }
+
+            for (let i = 0; i < numberOfPieces; i++) {
+                pieces.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height - canvas.height,
+                    size: Math.random() * 10 + 5,
+                    speed: Math.random() * 3 + 2,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 0.2 - 0.1,
+                    color: colors[Math.floor(Math.random() * colors.length)]
+                });
+            }
+            update();
+        }
+    </script>
+</body>
+</html>
